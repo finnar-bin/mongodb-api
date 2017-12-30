@@ -1,55 +1,27 @@
-var mongoose = require('mongoose');
+var express = require('express');
+var bodyParser = require('body-parser');
 
-//tell mongoose to use built in promise lib
-mongoose.Promise = global.Promise;
+var {mongoose} = require('./db/mongoose');
+var {Todo} = require('./models/todo');
+var {User} = require('./models/user');
 
-//connect to db
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+var app = express();
 
-//create model for the db
-var Todo = mongoose.model('Todo', {
-    text : {
-        type : String,
-        required : true,
-        minlength : 1,
-        trim : true
-    },
-    completed : {
-        type : Boolean,
-        default : false
-    },
-    completedAt : {
-        type : Number,
-        default : null
-    }
-});
+//middleware return value = json
+app.use(bodyParser.json());
 
-// var newTodo = new Todo({
-//     text : 'Edit a new video',
-// });
+app.post('/todos', (req, res) => {
+    //console.log(req.body);
+    var todo = new Todo({
+        text : req.body.text
+    });
+    todo.save().then((doc) => {
+        res.send(doc);
+    }, (err) => {
+        res.status(400).send(err);
+    });
+})
 
-// newTodo.save().then((succ) => {
-//     console.log(`Saved Todo: ${succ}`);
-// }, (err) => {
-//     console.log(`Unable to save Todo: ${err}`);
-// });
-
-//user -> email -> required, trimmed, string, minlength = 1
-var User = mongoose.model('User', {
-    email : {
-        type : String,
-        required : true,
-        trim : true,
-        minlength : 1
-    }
-});
-
-var newUser = new User({
-    email : 'narc.ph@gmail.com'
-});
-
-newUser.save().then((s) => {
-    console.log(`Registered new user: ${s}`);
-}, (e) => {
-    console.log(`Error registering user: ${e}`);
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
 });
