@@ -20,6 +20,15 @@ app.post('/todos', (req, res) => {
     }, (err) => {
         res.status(400).send(err);
     });
+});
+
+app.get('/todos', (req, res) => {
+    Todo.find().then((todos) => {
+        //use object to easily add features
+        res.send({todos});
+    }, (e) => {
+        res.status(400).send(e);
+    })
 })
 
 app.listen(3000, () => {
