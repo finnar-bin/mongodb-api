@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var {mongoose} = require('./db/mongoose');
+var {mongoose} = require('./db/mongoose'); //establish db connection
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
@@ -28,7 +28,7 @@ app.get('/todos', (req, res) => {
         res.send({todos});
     }, (e) => {
         res.status(400).send(e);
-    })
+    });
 });
 
 app.listen(3000, () => {

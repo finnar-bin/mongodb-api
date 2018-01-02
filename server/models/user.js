@@ -15,7 +15,7 @@ module.exports = {
 };
 
 // var newUser = new User({
-//     email : 'narc.ph@gmail.com'
+//     email : 'test@email.com'
 // });
 
 // newUser.save().then((s) => {
