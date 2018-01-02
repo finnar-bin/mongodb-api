@@ -11,6 +11,7 @@ var app = express();
 //middleware return value = json
 app.use(bodyParser.json());
 
+//router
 app.post('/todos', (req, res) => {
     //console.log(req.body);
     var todo = new Todo({
@@ -36,19 +37,19 @@ app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
     if (!ObjectID.isValid(id)) {
-        res.status(404).send();
-        console.log('Invalid ID.');
+        return res.status(404).send();
+        //console.log('Invalid ID.');
     }
 
     Todo.findById(id).then((todo) => {
         if (!todo) {
-            res.status(400).send();
-            return console.log('No results found.');
+            return res.status(404).send();
+            //console.log('No results found.');
         }
-        res.status(200).send(JSON.stringify(todo, undefined, 2));
+        res.status(200).send({todo});
     }).catch((e) => {
-        res.status(400).send();
-        console.log(e);
+        return res.status(400).send();
+        //console.log(e);
     });
 });
 
