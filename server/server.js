@@ -46,9 +46,9 @@ app.get('/todos/:id', (req, res) => {
             return res.status(404).send();
             //console.log('No results found.');
         }
-        res.status(200).send({todo});
+        res.send({todo});
     }).catch((e) => {
-        return res.status(400).send();
+        res.status(400).send();
         //console.log(e);
     });
 });

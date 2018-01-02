@@ -1,13 +1,17 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb');
 
-var {app} = require('./../server');
-var {Todo} = require('./../models/todo');
+const {app} = require('./../server');
+const {Todo} = require('./../models/todo');
+
 
 //seeder
 const seederTodos = [{
+    _id : new ObjectID(),
     text : 'First test'
 }, {
+    _id : new ObjectID(),
     text : 'Second test'
 }];
 
@@ -77,6 +81,18 @@ describe('GET /todos', () => {
             .expect((res) => {
                 expect(res.body.todos.length).toBe(2);
             })
-            .end(done());
+            .end(done);
+    });
+});
+
+describe('GET /todos/:id', () => {
+    it('should return a todo doc', (done) => {
+        request(app)
+            .get(`/todos/${seederTodos[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.text).toBe(seederTodos[0].text);
+            })
+            .end(done);
     });
 });
