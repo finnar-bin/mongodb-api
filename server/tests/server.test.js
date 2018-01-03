@@ -95,4 +95,20 @@ describe('GET /todos/:id', () => {
             })
             .end(done);
     });
+
+    it('should return a 404 if todo not found', (done) => {
+        var id = new ObjectID();
+
+        request(app)
+            .get(`/todos/${id.toHexString()}`)
+            .expect(404)
+            .end(done);
+    });
+
+    it('should return a 404 for non-object ids', (done) => {
+        request(app)
+            .get('/todos/123')
+            .expect(404)
+            .end(done);
+    });
 });
