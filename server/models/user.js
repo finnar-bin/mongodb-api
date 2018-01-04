@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-//user -> email -> required, trimmed, string, minlength = 1
+// User model config
 var User = mongoose.model('User', {
     email : {
         type : String,

@@ -9,14 +9,15 @@ const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
 
 const app = express();
+// dynamic port
 const port = process.env.PORT;
 
-//middleware return value = json
+// sets a middleware that will set return value to json
 app.use(bodyParser.json());
 
-//router
+// router config
+// post a todo
 app.post('/todos', (req, res) => {
-    //console.log(req.body);
     var todo = new Todo({
         text : req.body.text
     });
@@ -27,44 +28,41 @@ app.post('/todos', (req, res) => {
     });
 });
 
+// get all todos
 app.get('/todos', (req, res) => {
     Todo.find().then((todos) => {
-        //use object to easily add features
         res.send({todos});
     }, (e) => {
         res.status(400).send(e);
     });
 });
 
+// get todo by id
 app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
-        //console.log('Invalid ID.');
     }
 
     Todo.findById(id).then((todo) => {
         if (!todo) {
             return res.status(404).send();
-            //console.log('No results found.');
         }
         res.send({todo});
     }).catch((e) => {
         res.status(400).send();
-        //console.log(e);
     });
 });
 
+// delete todo by id
 app.delete('/todos/:id', (req, res) => {
-    //get id
+
     var id = req.params.id;
-    //validate id -> not valid, ret 404
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
     }
 
-    //remove todo by id
     Todo.findByIdAndRemove(id).then((todo) => {
         if (!todo) {
             return res.status(404).send();
@@ -74,6 +72,7 @@ app.delete('/todos/:id', (req, res) => {
     }).catch((e) => res.status(400).send());
 });
 
+// update todo by id
 app.patch('/todos/:id', (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['text', 'completed']);
@@ -100,7 +99,7 @@ app.patch('/todos/:id', (req, res) => {
     });
 });
 
-// /POST users -> use pick / wipe database
+// user register
 app.post('/users', (req, res) => {
     var userInfo = _.pick(req.body, ['email', 'password']);
     var user = new User(userInfo);
@@ -111,7 +110,7 @@ app.post('/users', (req, res) => {
     });
 });
 
-
+// port setup
 app.listen(port, () => {
     console.log(`Server running on port ${port}...`);
 });
