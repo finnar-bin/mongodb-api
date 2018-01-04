@@ -100,6 +100,18 @@ app.patch('/todos/:id', (req, res) => {
     });
 });
 
+// /POST users -> use pick / wipe database
+app.post('/users', (req, res) => {
+    var userInfo = _.pick(req.body, ['email', 'password']);
+    var user = new User(userInfo);
+    user.save().then((info) => {
+        res.send(info)
+    }, (err) => {
+        res.status(400).send(err);
+    });
+});
+
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}...`);
 });
