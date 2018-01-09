@@ -315,4 +315,24 @@ describe('POST /users/login', () => {
                 }).catch((e) => done(e)); 
             });
     });
-})
+});
+
+describe('DELETE /users/me/token', () => {
+    it('should remove auth token on log out', (done) => {
+        // del request - set x-auth = token from seeder - 200 - async end find user, tokens length = 0
+        request(app)
+            .delete('/users/me/token')
+            .set('x-auth', seederUsers[0].tokens[0].token)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+
+                User.findById(seederUsers[0]._id).then((user) => {
+                    expect(user.tokens.length).toBe(0);
+                    done();
+                }).catch((e) => done(e));
+            });
+    });
+});
